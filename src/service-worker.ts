@@ -77,4 +77,12 @@ self.addEventListener('message', (event) => {
   }
 });
 
+onmessage = function (e) {
+  console.log('Message received from main script');
+  var workerResult = 'Result: ' + (e.data[0]);
+  console.log(workerResult);
+  console.log('Posting message back to main script');
+  postMessage("COMINGBACK");
+}
+
 // Any other custom service worker logic can go here.
