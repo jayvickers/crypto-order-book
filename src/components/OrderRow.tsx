@@ -30,6 +30,8 @@ const OrderRow: React.FC<IOrderRowProps> = (props: IOrderRowProps) => {
         opacity: "0.2"
     }
 
+    //this is the only place wss feed data is actually drawn on the map.
+    //everything is typed and escaped at this point, XSS unlikely
     return (
         <div className={`row-container --${props.orderType}`} >
             <div style={visualizerStyles} />

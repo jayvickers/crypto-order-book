@@ -6,13 +6,11 @@ body {
 main {
     position: relative;
 }
-
 ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-
 button {
     width: 8rem;
     padding: .5rem 0;
@@ -21,13 +19,12 @@ button {
     color: white;
     font-size: 1.1rem;
 }
-
 li {
     position: relative;
 }
 
 .row-container {
-    margin-right: 2rem;
+    margin-right: 4rem;
 }
 
 .spread span {
@@ -42,7 +39,6 @@ li {
     display: grid;
     grid-template-columns: 1.25fr 1fr 1fr;
 }
-
 .row-container span {
     display: flex;
     width: auto;
@@ -50,7 +46,6 @@ li {
     padding: .25rem 0;
     font-family: Consolas,Menlo,Droid Sans Mono,Courier New,monospace;
 }
-
 .row-container span.--header{
     color: var(--off-text-color);
 }

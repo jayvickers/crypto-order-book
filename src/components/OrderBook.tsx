@@ -197,7 +197,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
 
     const timer: ReturnType<typeof setTimeout> = setTimeout(() => {
       props.sock.close();
-    }, 5000);
+    }, 20000);
 
   }, [ticker])
 
