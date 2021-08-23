@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import OrderBook from '../components/OrderBook';
 import ErrorBoundary from './ErrorCatcher';
 
@@ -8,11 +8,8 @@ const ObContainer: React.FC = (props) => {
 
     return (
         <ErrorBoundary>
-
             <OrderBook sock={webSocket.current} />
-
         </ErrorBoundary >
-
     )
 }
 

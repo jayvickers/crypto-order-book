@@ -1,9 +1,11 @@
 import { TOrderList } from "../types/types";
 
+//get nearest (round down) group level for a given price
 const round = (priceVal: number, groupVal: number) => {
     return Math.floor(priceVal / groupVal) * groupVal;
 }
 
+//iterate bids/asks and group based on groupvalue
 const groupOrdersByVal = (asks: TOrderList, bids: TOrderList, groupVal: number) => {
     asks.forEach((ask: number[]) => {
 
@@ -14,33 +16,19 @@ const groupOrdersByVal = (asks: TOrderList, bids: TOrderList, groupVal: number) 
         let existingIdx = asks.findIndex((ask) => ask.includes(roundedPrice));
         let currentIdx = asks.indexOf(ask);
 
-        // console.log("current: " + currPrice);
-        //  console.log("rounded: " + roundedPrice);
-
         //already have a grouping there
         if (existingIdx >= 0) {
             //if we're not already at the index
             if (existingIdx !== currentIdx) {
                 //add size to the existing one
                 asks[existingIdx][1] += ask[1];
-
-                //  console.log("found one already");
-                //  console.log(roundedPrice);
-                //  console.log("removing");
-                //  console.log(ask);
-                //remove the current row, its been shifted to existing
                 //mark for deletion
                 asks[currentIdx].push(-1);
-                // newAsks.splice(currentIdx, 1);
             }
-
-
             //else already there, dont need to do anything
         }
         //we don't already have a grouping at this level, make one where we are
         else {
-            //  console.log("adding new group here ");
-            //  console.log(roundedPrice);
             asks[currentIdx][0] = roundedPrice;
         }
     });
@@ -60,11 +48,8 @@ const groupOrdersByVal = (asks: TOrderList, bids: TOrderList, groupVal: number) 
             if (existingIdx !== currentIdx) {
                 //add size to the existing one
                 bids[existingIdx][1] += bid[1];
-
-                //remove the current row, its been shifted to existing
                 //mark for deletion
                 bids[currentIdx].push(-1);
-                //newBids.splice(currentIdx, 1);
             }
 
             //else already there, dont need to do anything
@@ -73,7 +58,6 @@ const groupOrdersByVal = (asks: TOrderList, bids: TOrderList, groupVal: number) 
         else {
             bids[currentIdx][0] = roundedPrice;
         }
-
     });
 
     asks = asks.filter((ask) => ask.length !== 5);
@@ -90,6 +74,7 @@ const groupOrdersByVal = (asks: TOrderList, bids: TOrderList, groupVal: number) 
     }
 }
 
+//add up totals
 const calculateOrderTotals = (asks: TOrderList, bids: TOrderList) => {
     let askTotal: number = 0;
     let bidTotal: number = 0;
@@ -107,6 +92,7 @@ const calculateOrderTotals = (asks: TOrderList, bids: TOrderList) => {
     return Math.max(askTotal, bidTotal);
 }
 
+//take in list of updates and apply them to a given bid/ask list
 const updateOrderList = (orderList: TOrderList, updateList: TOrderList) => {
     updateList.forEach((askUpdate: number[]) => {
         //have it already

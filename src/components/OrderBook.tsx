@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import { IWssFeedUpdate, TGrouping, TOrder, IOrderState, TOrderList } from "../types/types";
 import { EthTicker, XbtTicker } from '../helpers/consts';
@@ -180,7 +181,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
 
     };
     props.sock.onclose = (message: CloseEvent) => {
-      console.log("Closed wss feed: " + message);
+      console.log("Closed wss feed");
     };
 
     props.sock.onerror = (error: Event) => {
