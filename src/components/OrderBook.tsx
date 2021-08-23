@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
-import { IWssFeedUpdate, TGrouping, TOrder, IOrderState, TOrderList } from "../types/types";
-import { EthTicker, XbtTicker } from '../helpers/consts';
+import { IWssFeedUpdate, TOrder, IOrderState, TOrderList, TTickerType } from "../types/types";
+import { ethTicker, ethGroupVals, xbtGroupVals, xbtTicker } from '../helpers/consts';
 import { calculateOrderTotals, groupOrdersByVal, updateOrderList } from '../helpers/helperFunctions';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
@@ -16,29 +16,25 @@ interface IOrderListProps {
 }
 
 const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
-  const [error, setError] = useState("");
-  const [group, setGroup] = useState<number>(0.5);
-  const [ticker, setTicker] = useState(XbtTicker);
+  const [group, setGroup] = useState<number>(-1);
+  const [ticker, setTicker] = useState(xbtTicker);
   const [orders, setOrders] = useState<IOrderState>({ asks: [], bids: [] });
   const isMobile = useMediaQuery('(max-width: 600px)');
-  let updateTime = useRef(new Date());
-  let spread = useRef("");
-
-  const xbtGroupVals: TGrouping = [0.5, 1, 2.5];
-  const ethGroupVals: TGrouping = [0.05, 0.1, 0.25];
+  let updateTime = useRef<Date>(new Date());
+  let spread = useRef<string>("");
 
 
   //calculate totals and visualizer widths for each row
   const fillVisualizersAndTotals = (asks: TOrderList, bids: TOrderList) => {
-    let largestTotal = calculateOrderTotals(asks, bids);
+    const largestTotal: number = calculateOrderTotals(asks, bids);
     calculateVisualizers(asks, largestTotal);
     calculateVisualizers(bids, largestTotal);
   }
 
   //update bids/asks based on selected group level
   const updateGroup = (groupVal: number) => {
-    setOrders((prevOrders) => {
-      const groupedOrders = groupOrdersByVal([...prevOrders.asks], [...prevOrders.bids], groupVal);
+    setOrders((prevOrders: IOrderState) => {
+      const groupedOrders: IOrderState = groupOrdersByVal([...prevOrders.asks], [...prevOrders.bids], groupVal);
       fillVisualizersAndTotals(groupedOrders.asks, groupedOrders.bids);
       spread.current = calculateSpread(groupedOrders.asks, groupedOrders.bids);
       return groupedOrders;
@@ -47,27 +43,27 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
 
   //update bids/asks based on wss feed delta updates
   const updateOrders = (dataAsks: TOrderList, dataBids: TOrderList) => {
-    setOrders((prevOrders) => {
-      let newAsks = [...prevOrders.asks];
-      let newBids = [...prevOrders.bids];
+    setOrders((prevOrders: IOrderState) => {
+      let newAsks: TOrderList = [...prevOrders.asks];
+      let newBids: TOrderList = [...prevOrders.bids];
 
       updateOrderList(newAsks, dataAsks);
       updateOrderList(newBids, dataBids);
 
       //sort for display
-      newAsks.sort((a, b) => {
+      newAsks.sort((a: number[], b: number[]) => {
         if (a[0] < b[0]) return -1;
         if (a[0] > b[0]) return 1;
         else return 0;
       });
 
-      newBids.sort((a, b) => {
+      newBids.sort((a: number[], b: number[]) => {
         if (a[0] < b[0]) return 1;
         if (a[0] > b[0]) return -1;
         else return 0;
       });
 
-      let trimLen = Math.min(newAsks.length, newBids.length, 25);
+      const trimLen: number = Math.min(newAsks.length, newBids.length, 25);
 
       newAsks = newAsks.slice(0, trimLen);
       newBids = newBids.slice(0, trimLen);
@@ -75,10 +71,23 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
       fillVisualizersAndTotals(newAsks, newBids);
       spread.current = calculateSpread(newAsks, newBids);
 
-      return {
+      //avoid grouping if we dont have to
+      //if group is null that means we havent changed it yet and its filtering by default
+      let groupedVals: IOrderState = {
         asks: newAsks,
         bids: newBids
       }
+
+      if (group !== -1) {
+        groupedVals = groupOrdersByVal(groupedVals.asks, groupedVals.bids, group);
+      }
+
+      const groupedOrderState: IOrderState = {
+        asks: groupedVals.asks,
+        bids: groupedVals.bids
+      }
+
+      return groupedOrderState;
     })
   }
 
@@ -95,10 +104,9 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
   //calculate width of each visualizer as a percentage of the largest total on the book currently
   const calculateVisualizers = (orderList: TOrderList, largest: number) => {
     orderList.forEach((value: number[]) => {
-      const totalPerc = value[2] / largest;
+      const totalPerc: number = value[2] / largest;
       value[3] = totalPerc * 100;
     });
-
   }
 
   //Use a datetime to help with throttling updates
@@ -115,21 +123,18 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
         product_ids: [ticker],
       };
 
-      props.sock.send(JSON.stringify(subscription));
+      try {
+        props.sock.send(JSON.stringify(subscription));
+      } catch (error) {
+        console.log("error while attempting to subscribe");
+      }
     };
 
     props.sock.onmessage = (message: MessageEvent) => {
       const data: IWssFeedUpdate = JSON.parse(message.data);
+      const dataFeed: string = data.feed;
       //initial hydration from snapshot
-      if (data.feed === "book_ui_1_snapshot" && data.product_id === ticker) {
-
-        // set default groupings
-        if (ticker === XbtTicker) {
-          setGroup(xbtGroupVals[0]);
-        }
-        else {
-          setGroup(ethGroupVals[0]);
-        }
+      if (dataFeed === "book_ui_1_snapshot") {
 
         let initialAsks: TOrderList = [];
         let askTotal: number = 0;
@@ -159,33 +164,33 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
           bids: initialBids
         }
 
-        setOrders(newstate)
+        setOrders(newstate);
 
         updateTime.current = new Date();
       }
 
       //update messages from feed
-      else if (data.feed === "book_ui_1" && data.product_id === ticker) {
-        //TODO: grouping
-
+      else if (dataFeed === "book_ui_1") {
         if (data.asks || data.bids) {
-          let currentTime = new Date();
+          const currentTime: Date = new Date();
           //150ms throttle on writing updates
-          if (currentTime.getTime() - updateTime.current.getTime() > 150) {
-            //additional throttling with requestanimationframe intented for lower end devices
+          if (currentTime.getTime() - updateTime.current.getTime() > 100) {
+            //additional throttling with requestanimationframe intended for lower end devices
             const schedule = rafSchedule(updateOrders);
             schedule(data.asks, data.bids);
           }
         }
       }
-
     };
+
     props.sock.onclose = (message: CloseEvent) => {
-      console.log("Closed wss feed");
+      console.log("Closed wss feed successfully");
     };
 
     props.sock.onerror = (error: Event) => {
       console.log("Error from wss feed: " + error);
+      console.log("Writing error to logs...");
+      console.log("Attempting to unsubscribe and halt wss feed");
       //halt feed
       const unsubscribe = {
         event: "unsubscribe",
@@ -197,11 +202,13 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
 
     const timer: ReturnType<typeof setTimeout> = setTimeout(() => {
       props.sock.close();
-    }, 20000);
+    }, 30000);
 
-  }, [ticker])
+  }, [ticker, group])
 
+  /******************/
   /* EVENT HANDLERS */
+  /******************/
 
   const handleToggleFeed = () => {
     //halt feed
@@ -212,7 +219,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
     };
     props.sock.send(JSON.stringify(unsubscribe));
 
-    let newticker = ticker === XbtTicker ? EthTicker : XbtTicker;
+    const newticker: TTickerType = ticker === xbtTicker ? ethTicker : xbtTicker;
 
     //restart feed with new subscription
     const subscription = {
@@ -226,20 +233,35 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
   }
 
 
-  const handleKillFeed = () => {
-    //halt feed
-    const unsubscribe = {
-      event: "unsubscribe",
-      feed: "book_ui_1",
-      product_ids: [ticker],
-    };
-    props.sock.send(JSON.stringify(unsubscribe));
-    //throw an error
-    try {
-      throw new Error("ouch");
-
-    } catch (error) {
-      setError("ouch");
+  //ErrorBoundary doesn't catch errors within event handlers
+  const handleKillFeed = (isKilled: boolean) => {
+    if (!isKilled) {
+      //restart
+      const subscription = {
+        event: "subscribe",
+        feed: "book_ui_1",
+        product_ids: [ticker],
+      };
+      try {
+        props.sock.send(JSON.stringify(subscription));
+      } catch (error) {
+        console.log("error while attempting to subscribe");
+      }
+    }
+    else {
+      try {
+        throw new Error("ouch");
+      } catch (error) {
+        console.log("Caught unexpected error");
+        console.log("Writing error to logs...");
+        console.log("Attempting to unsubscribe and halt wss feed");
+        const unsubscribe = {
+          event: "unsubscribe",
+          feed: "book_ui_1",
+          product_ids: [ticker],
+        };
+        props.sock.send(JSON.stringify(unsubscribe));
+      }
     }
   }
 
@@ -253,21 +275,9 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
     ...(isMobile ? { gridTemplateRows: "1fr auto 1fr" } : { gridTemplateColumns: "1fr 1fr" }),
   }
 
-  const errorStyles: React.CSSProperties = {
-    position: "absolute",
-    width: "100%",
-    height: "90%",
-    backgroundColor: "red",
-    zIndex: 2,
-    fontSize: "2rem",
-    opacity: ".9",
-    color: "white"
-  }
-
   return (
     <main>
-      {error && <div style={errorStyles}>feed is broken</div>}
-      <Header groupVals={ticker === XbtTicker ? xbtGroupVals : ethGroupVals} handleGroupChange={handleGroupChange} showSpread={!isMobile} spread={spread.current} />
+      <Header groupVals={ticker === xbtTicker ? xbtGroupVals : ethGroupVals} handleGroupChange={handleGroupChange} showSpread={!isMobile} spread={spread.current} />
       <div style={orderBookContainerStyles}>
         <OrderList isMobile={isMobile} orders={orders.asks} orderType="ask" />
         {isMobile &&

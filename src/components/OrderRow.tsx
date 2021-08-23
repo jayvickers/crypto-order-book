@@ -34,7 +34,7 @@ const OrderRow: React.FC<IOrderRowProps> = (props: IOrderRowProps) => {
     //everything is typed and escaped at this point, XSS unlikely
     return (
         <div className={`row-container --${props.orderType}`} >
-            <div style={visualizerStyles} />
+            <div data-testid="visualizer" style={visualizerStyles} />
             <span style={priceColor} className="price-col">
                 {numberWithCommas(props.price.toFixed(2))}
             </span>
@@ -47,6 +47,5 @@ const OrderRow: React.FC<IOrderRowProps> = (props: IOrderRowProps) => {
         </div >
     )
 }
-
 
 export default OrderRow

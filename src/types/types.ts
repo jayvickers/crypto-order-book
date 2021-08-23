@@ -1,18 +1,18 @@
-export type TOrder = [number, number];
+export type TOrder = number[];
 
 export interface IWssFeedUpdate {
     product_id: string;
     numLevels: number;
     feed: string;
-    bids: [[number, number]];
-    asks: [[number, number]];
+    bids: number[][];
+    asks: number[][];
 }
 
 export interface IOrderUpdate {
     product_id: string;
     feed: string;
-    bids: [[number, number]];
-    asks: [[number, number]];
+    bids: number[][];
+    asks: number[][];
 }
 
 export interface IOrderState {

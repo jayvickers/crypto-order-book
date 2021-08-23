@@ -14,7 +14,7 @@ const OrderList: React.FC<IOrderListProps> = (props: IOrderListProps) => {
         borderTop: "1px solid rgb(135, 142, 158)",
         borderBottom: "0.5px solid rgb(135 142 158 / 35%)"
     }
-    let newOrders = [...props.orders];
+    let newOrders: TOrderList = [...props.orders];
     if (props.isMobile && props.orderType === "ask") {
         newOrders.sort((a, b) => {
             if (a[0] < b[0]) return 1;
@@ -49,11 +49,11 @@ const OrderList: React.FC<IOrderListProps> = (props: IOrderListProps) => {
 }
 //only re-render if the bids/asks are actually changing rows
 export default React.memo(OrderList, (prevProps, nextProps) => {
-    let prevOrders = prevProps.orders;
-    let nextOrders = nextProps.orders;
+    const prevOrders: TOrderList = prevProps.orders;
+    const nextOrders: TOrderList = nextProps.orders;
 
-    const diffsnew = nextOrders.filter((order) => !prevOrders.some((order2) => order[0] === order2[0] && order[1] === order2[1]));
-    const diffsold = prevOrders.filter((order) => !nextOrders.some((order2) => order[0] === order2[0] && order[1] === order2[1]));
+    const diffsnew: TOrderList = nextOrders.filter((order) => !prevOrders.some((order2) => order[0] === order2[0] && order[1] === order2[1]));
+    const diffsold: TOrderList = prevOrders.filter((order) => !nextOrders.some((order2) => order[0] === order2[0] && order[1] === order2[1]));
 
     if (nextProps.isMobile !== prevProps.isMobile) {
         return false;

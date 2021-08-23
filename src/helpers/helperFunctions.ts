@@ -2,7 +2,7 @@ import { TOrderList } from "../types/types";
 
 //get nearest (round down) group level for a given price
 const round = (priceVal: number, groupVal: number) => {
-    return Math.floor(priceVal / groupVal) * groupVal;
+    return (Math.floor(priceVal / groupVal) * groupVal);
 }
 
 //iterate bids/asks and group based on groupvalue
@@ -60,8 +60,8 @@ const groupOrdersByVal = (asks: TOrderList, bids: TOrderList, groupVal: number) 
         }
     });
 
-    asks = asks.filter((ask) => ask.length !== 5);
-    bids = bids.filter((bid) => bid.length !== 5);
+    asks = asks.filter((ask) => !ask.includes(-1));
+    bids = bids.filter((bid) => !bid.includes(-1));
 
     let trimLen = Math.min(asks.length, bids.length, 25);
 
@@ -117,4 +117,4 @@ const updateOrderList = (orderList: TOrderList, updateList: TOrderList) => {
     });
 }
 
-export { calculateOrderTotals, groupOrdersByVal, updateOrderList }
+export { calculateOrderTotals, groupOrdersByVal, round, updateOrderList }
