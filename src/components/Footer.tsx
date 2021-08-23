@@ -27,9 +27,15 @@ const Footer: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         setForceKill(!forceKill);
     }
 
+    const toggleFeedOnChange = () => {
+        setForceKill(false);
+        props.handleKillFeed(false);
+        props.handleToggleFeed();
+    }
+
     return (
         <footer style={footerContainerStyles}>
-            <button onClick={props.handleToggleFeed} style={toggleButtonStyles}>
+            <button onClick={toggleFeedOnChange} style={toggleButtonStyles}>
                 Toggle Feed
             </button>
             <button onClick={killFeedOnChange} style={killButtonStyles}>

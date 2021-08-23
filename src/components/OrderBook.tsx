@@ -244,6 +244,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
   const handleKillFeed = (isKilled: boolean) => {
     if (!isKilled) {
       //restart
+      console.log("resuming feed...");
       const subscription: IWSSSubscribeEvent = {
         event: "subscribe",
         feed: "book_ui_1",
