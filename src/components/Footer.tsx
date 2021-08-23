@@ -1,7 +1,11 @@
 import React from 'react';
 
-const Footer: React.FC = () => {
+interface IHeaderProps {
+    handleKillFeed: () => void
+    handleToggleFeed: () => void
+}
 
+const Footer: React.FC<IHeaderProps> = (props: IHeaderProps) => {
     const footerContainerStyles: React.CSSProperties = {
         display: "flex",
         justifyContent: "center",
@@ -19,10 +23,10 @@ const Footer: React.FC = () => {
 
     return (
         <footer style={footerContainerStyles}>
-            <button style={toggleButtonStyles}>
+            <button onClick={props.handleToggleFeed} style={toggleButtonStyles}>
                 Toggle Feed
             </button>
-            <button style={killButtonStyles}>
+            <button onClick={props.handleKillFeed} style={killButtonStyles}>
                 Kill Feed
             </button>
         </footer>

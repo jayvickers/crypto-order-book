@@ -3,6 +3,9 @@ body {
     color: white;
     --off-text-color: rgb(135, 142, 158);
 }
+main {
+    position: relative;
+}
 
 ul {
     list-style: none;
@@ -21,6 +24,10 @@ button {
 
 li {
     position: relative;
+}
+
+.row-container {
+    margin-right: 2rem;
 }
 
 .spread span{
@@ -58,16 +65,16 @@ li {
 }
 
 @media only screen and (min-width: 600px) {
-    .row-container.--ask > .price-col,
-    .grid-container.--ask > .price-col {
+    .row-container.--bid > .price-col,
+    .grid-container.--bid > .price-col {
         order: 3;
     }
-    .row-container.--ask > .size-col,
-    .grid-container.--ask > .size-col {
+    .row-container.--bid > .size-col,
+    .grid-container.--bid > .size-col {
         order: 2;
     }
-    .row-container.--ask > .total-col,
-    .grid-container.--ask > .total-col {
+    .row-container.--bid > .total-col,
+    .grid-container.--bid > .total-col {
         order: 1;
     }
 
@@ -80,10 +87,18 @@ li {
         grid-template-columns: 1fr 1fr 1.25fr;
     }
 
-    .grid-container.--bid {
+    .grid-container.--ask {
         margin-right: 4rem;
     }
-    .grid-container.--ask {
+    /* .grid-container.--ask {
         margin-right: 0;
+    } */
+
+    .row-container.--ask {
+        margin-right: 4rem;
+    }
+
+    .order-section.--ask {
+        order: 1;
     }
 }

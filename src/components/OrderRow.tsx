@@ -11,11 +11,11 @@ interface IOrderRowProps {
 }
 const OrderRow: React.FC<IOrderRowProps> = (props: IOrderRowProps) => {
 
-    const bgColor: string = props.orderType === "bid" ? "rgb(37, 207, 146)" : "rgb(255, 90, 90)"
-
     const numberWithCommas = (num: string | number) => {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+
+    const bgColor: string = props.orderType === "bid" ? "rgb(37, 207, 146)" : "rgb(255, 90, 90)"
 
     const priceColor: React.CSSProperties = {
         color: bgColor
@@ -24,7 +24,7 @@ const OrderRow: React.FC<IOrderRowProps> = (props: IOrderRowProps) => {
     const visualizerStyles: React.CSSProperties = {
         position: "absolute",
         height: "100%",
-        ...(props.isMobile ? { left: "0" } : props.orderType === "bid" ? { left: "0" } : { right: "0" }),
+        ...(props.isMobile ? { left: "0" } : props.orderType === "bid" ? { right: "0" } : { left: "0" }),
         width: `${props.visualizerPercentage}%`,
         background: bgColor,
         opacity: "0.2"

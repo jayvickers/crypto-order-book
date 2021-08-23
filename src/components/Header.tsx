@@ -1,11 +1,20 @@
-import React from 'react';
-
+import React, { useState } from 'react';
+import { TGrouping } from "../types/types";
 interface IHeaderProps {
+    groupVals: TGrouping,
+    handleGroupChange: (val: number) => void;
     showSpread: boolean,
     spread: string
 }
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
+    const [groupVal, setGroupVal] = useState(props.groupVals[0]);
+
+    const updateGroupVal = (val: string) => {
+        const numVal: number = parseFloat(val)
+        setGroupVal(numVal);
+        props.handleGroupChange(numVal);
+    }
 
     const headerStyles: React.CSSProperties = {
         display: "flex",
@@ -23,11 +32,15 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
     return (
         <header style={headerStyles}>
             <span>Order Book</span>
-            {props.showSpread && <div className="spread">Spread: <span>{props.spread}</span></div>}
-            <select style={selectStyles} value={"A"}>
-                <option value="A">Apple</option>
-                <option value="B">Banana</option>
-                <option value="C">Cranberry</option>
+            {props.showSpread &&
+                <div className="spread">Spread:
+                    <span>{props.spread}</span>
+                </div>
+            }
+            <select onChange={(e) => updateGroupVal(e.target.value)} style={selectStyles} value={groupVal}>
+                {props.groupVals.map((groupVal, index) => {
+                    return (<option key={index} value={groupVal}>{`Group ${groupVal}`}</option>);
+                })}
             </select>
         </header>
     )

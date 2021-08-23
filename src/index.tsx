@@ -1,15 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import OrderBook from './components/OrderBook';
+import ObContainer from './components/ObContainer';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
-//TODO: error boundary maybe
 ReactDOM.render(
-  <React.StrictMode>
-    <OrderBook />
-  </React.StrictMode>,
+  <ObContainer />,
   document.getElementById('root')
 );
 
