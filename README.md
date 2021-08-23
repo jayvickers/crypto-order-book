@@ -1,9 +1,8 @@
 # Order Book submission
-
-**production link:**
-
+**production link:** https://vercel.com/jayvickers/jacob-8232021
 ## Considerations
 ### Performance
+- monitoring through `Lighthouse` analytics scores and React `profiler` 
 - re-render prevention through `useEffect` dependency management and `useMemo`
 - ui repaint throttling and `requestanimationframe` scheduling for device specific throttling
 
