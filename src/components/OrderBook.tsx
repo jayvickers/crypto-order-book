@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
-import { IWssFeedUpdate, TOrder, IOrderState, TOrderList, TTickerType } from "../types/types";
+import { IWssFeedUpdate, IWSSSubscribeEvent, TDataFeed, TOrder, IOrderState, TOrderList, TTickerType } from "../types/types";
 import { ethTicker, ethGroupVals, xbtGroupVals, xbtTicker } from '../helpers/consts';
 import { calculateOrderTotals, groupOrdersByVal, updateOrderList } from '../helpers/helperFunctions';
 import { useMediaQuery } from '../hooks/useMediaQuery';
@@ -122,7 +122,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
   //initialize websocket and define its functional behavior
   useEffect(() => {
     props.sock.onopen = () => {
-      const subscription = {
+      const subscription: IWSSSubscribeEvent = {
         event: "subscribe",
         feed: "book_ui_1",
         product_ids: [ticker],
@@ -137,7 +137,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
 
     props.sock.onmessage = (message: MessageEvent) => {
       const data: IWssFeedUpdate = JSON.parse(message.data);
-      const dataFeed: string = data.feed;
+      const dataFeed: TDataFeed = data.feed;
       //initial hydration from snapshot
       if (dataFeed === "book_ui_1_snapshot") {
 
@@ -244,7 +244,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
   const handleKillFeed = (isKilled: boolean) => {
     if (!isKilled) {
       //restart
-      const subscription = {
+      const subscription: IWSSSubscribeEvent = {
         event: "subscribe",
         feed: "book_ui_1",
         product_ids: [ticker],
@@ -262,7 +262,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
         console.log("Caught unexpected error");
         console.log("Writing error to logs...");
         console.log("Attempting to unsubscribe and halt wss feed");
-        const unsubscribe = {
+        const unsubscribe: IWSSSubscribeEvent = {
           event: "unsubscribe",
           feed: "book_ui_1",
           product_ids: [ticker],
