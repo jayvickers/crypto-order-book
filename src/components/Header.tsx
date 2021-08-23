@@ -33,8 +33,8 @@ const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         <header style={headerStyles}>
             <span>Order Book</span>
             {props.showSpread &&
-                <div className="spread">Spread:
-                    <span>{props.spread}</span>
+                <div className="spread">
+                    <span>{`Spread: ${props.spread}`}</span>
                 </div>
             }
             <select onChange={(e) => updateGroupVal(e.target.value)} style={selectStyles} value={groupVal}>

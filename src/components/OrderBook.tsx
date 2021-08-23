@@ -271,7 +271,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
         <OrderList isMobile={isMobile} orders={orders.asks} orderType="ask" />
         {isMobile &&
           <div className="spread">
-            Spread: <span>{spread.current}</span>
+            <span>{`Spread: ${spread.current}`}</span>
           </div>}
         <OrderList isMobile={isMobile} orders={orders.bids} orderType="bid" />
       </div>

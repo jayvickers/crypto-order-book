@@ -30,29 +30,20 @@ li {
     margin-right: 2rem;
 }
 
-.spread span{
+.spread span {
     font-family: Consolas,Menlo,Droid Sans Mono,Courier New,monospace;
 }
-.spread{    
+.spread {    
     color: var(--off-text-color);
     margin: auto;
 }
 
-.row-container,
-.grid-container {
+.row-container {
     display: grid;
     grid-template-columns: 1.25fr 1fr 1fr;
 }
 
-.grid-container.--ask {
-    margin-right: 2rem;
-}
-.grid-container.--bid {
-    margin-right: 2rem;
-}
-
-.row-container span,
-.grid-container span {
+.row-container span {
     display: flex;
     width: auto;
     justify-content: flex-end;
@@ -60,44 +51,27 @@ li {
     font-family: Consolas,Menlo,Droid Sans Mono,Courier New,monospace;
 }
 
-.grid-container span.--header{
+.row-container span.--header{
     color: var(--off-text-color);
 }
 
 @media only screen and (min-width: 600px) {
-    .row-container.--bid > .price-col,
-    .grid-container.--bid > .price-col {
+    .row-container.--bid > .price-col {
         order: 3;
     }
-    .row-container.--bid > .size-col,
-    .grid-container.--bid > .size-col {
+    .row-container.--bid > .size-col {
         order: 2;
     }
-    .row-container.--bid > .total-col,
-    .grid-container.--bid > .total-col {
+    .row-container.--bid > .total-col {
         order: 1;
     }
-
-    .row-container.--ask,
-    .grid-container.--ask {
+    .row-container.--ask {
         grid-template-columns: 1.25fr 1fr 1fr;
+        margin-right: 4rem;
     }
-    .row-container.--bid,
-    .grid-container.--bid {
+    .row-container.--bid {
         grid-template-columns: 1fr 1fr 1.25fr;
     }
-
-    .grid-container.--ask {
-        margin-right: 4rem;
-    }
-    /* .grid-container.--ask {
-        margin-right: 0;
-    } */
-
-    .row-container.--ask {
-        margin-right: 4rem;
-    }
-
     .order-section.--ask {
         order: 1;
     }

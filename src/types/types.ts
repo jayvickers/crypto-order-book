@@ -1,7 +1,3 @@
-//TODO: cleanup and change names
-
-//row type
-
 export type TOrder = [number, number];
 
 export interface IWssFeedUpdate {
