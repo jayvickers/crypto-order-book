@@ -61,7 +61,7 @@ li {
     }
     .row-container.--ask {
         grid-template-columns: 1.25fr 1fr 1fr;
-        margin-right: 30%;
+        margin-right: 25%;
     }
     .row-container.--bid {
         grid-template-columns: 1fr 1fr 1.25fr;
