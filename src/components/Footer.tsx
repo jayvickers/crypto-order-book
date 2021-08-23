@@ -13,12 +13,12 @@ const Footer: React.FC<IHeaderProps> = (props: IHeaderProps) => {
         margin: "1rem 0 0.5rem 0"
     }
 
-    const toggleButtonStyles = {
+    const toggleButtonStyles: React.CSSProperties = {
         marginRight: "1rem",
         background: "rgb(87, 65, 217)"
     }
 
-    const killButtonStyles = {
+    const killButtonStyles: React.CSSProperties = {
         background: "rgb(185, 29, 29)"
     }
 
