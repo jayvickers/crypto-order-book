@@ -22,6 +22,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
   const isMobile = useMediaQuery('(max-width: 600px)');
   let updateTime = useRef<Date>(new Date());
   let spread = useRef<string>("");
+  const bookDepth = useRef<number>(isMobile ? 16 : 20);
 
 
   //calculate totals and visualizer widths for each row
@@ -63,7 +64,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
         else return 0;
       });
 
-      const trimLen: number = Math.min(newAsks.length, newBids.length, 25);
+      const trimLen: number = Math.min(newAsks.length, newBids.length, bookDepth.current);
 
       newAsks = newAsks.slice(0, trimLen);
       newBids = newBids.slice(0, trimLen);
@@ -114,6 +115,10 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
     updateTime.current = new Date();
   }, [orders])
 
+  useEffect(() => {
+    bookDepth.current = isMobile ? 16 : 25;
+  }, [isMobile])
+
   //initialize websocket and define its functional behavior
   useEffect(() => {
     props.sock.onopen = () => {
@@ -140,7 +145,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
         let askTotal: number = 0;
 
         //hydrate asks
-        data.asks.forEach((order) => {
+        data.asks.slice(0, bookDepth.current).forEach((order) => {
           const rowOrder: TOrder = order;
           askTotal += rowOrder[1];
           initialAsks.push([...rowOrder, askTotal]);
@@ -150,7 +155,7 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
         let initialBids: TOrderList = [];
 
         //hydrate bids
-        data.bids.forEach((order) => {
+        data.bids.slice(0, bookDepth.current).forEach((order) => {
           const rowOrder: TOrder = order;
           bidTotal += rowOrder[1];
           initialBids.push([...rowOrder, bidTotal]);
@@ -212,24 +217,30 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
 
   const handleToggleFeed = () => {
     //halt feed
-    const unsubscribe = {
-      event: "unsubscribe",
-      feed: "book_ui_1",
-      product_ids: [ticker],
-    };
-    props.sock.send(JSON.stringify(unsubscribe));
+    try {
+      const unsubscribe = {
+        event: "unsubscribe",
+        feed: "book_ui_1",
+        product_ids: [ticker],
+      };
+      props.sock.send(JSON.stringify(unsubscribe));
 
-    const newticker: TTickerType = ticker === xbtTicker ? ethTicker : xbtTicker;
+      const newticker: TTickerType = ticker === xbtTicker ? ethTicker : xbtTicker;
 
-    //restart feed with new subscription
-    const subscription = {
-      event: "subscribe",
-      feed: "book_ui_1",
-      product_ids: [newticker],
-    };
-    props.sock.send(JSON.stringify(subscription));
+      //restart feed with new subscription
+      const subscription = {
+        event: "subscribe",
+        feed: "book_ui_1",
+        product_ids: [newticker],
+      };
+      props.sock.send(JSON.stringify(subscription));
 
-    setTicker(newticker);
+      setTicker(newticker);
+      setGroup(-1);
+    } catch (error) {
+      console.log("error restarting feed");
+    }
+
   }
 
 
@@ -275,8 +286,13 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
     ...(isMobile ? { gridTemplateRows: "1fr auto 1fr" } : { gridTemplateColumns: "1fr 1fr" }),
   }
 
+  const mainStyles: React.CSSProperties = {
+    display: "grid",
+    gridTemplateRows: isMobile ? "35px 910px 65px" : "35px 710px 65px"
+  }
+
   return (
-    <main>
+    <main style={mainStyles}>
       <Header groupVals={ticker === xbtTicker ? xbtGroupVals : ethGroupVals} handleGroupChange={handleGroupChange} showSpread={!isMobile} spread={spread.current} />
       <div style={orderBookContainerStyles}>
         <OrderList isMobile={isMobile} orders={orders.asks} orderType="ask" />

@@ -2,9 +2,7 @@ body {
     background: rgb(13,23,35);
     color: white;
     --off-text-color: rgb(135, 142, 158);
-}
-main {
-    position: relative;
+    font-family: arial;
 }
 ul {
     list-style: none;

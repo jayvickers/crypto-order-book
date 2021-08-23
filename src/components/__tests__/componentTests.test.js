@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { toHaveStyle } from '@testing-library/jest-dom';
 import ObContainer from '../ObContainer';
 import OrderRow from '../OrderRow';
 

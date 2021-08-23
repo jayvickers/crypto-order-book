@@ -8,11 +8,11 @@ interface IHeaderProps {
 }
 
 const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
-    const [groupVal, setGroupVal] = useState(props.groupVals[0]);
+    const [groupVal, setGroupVal] = useState<string>(props.groupVals[0]);
 
     const updateGroupVal = (val: string) => {
-        const numVal: number = parseFloat(val)
-        setGroupVal(numVal);
+        const numVal: number = parseFloat(val);
+        setGroupVal(val);
         props.handleGroupChange(numVal);
     }
 

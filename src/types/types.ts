@@ -20,7 +20,7 @@ export interface IOrderState {
     bids: number[][];
 }
 
-export type TGrouping = number[];
+export type TGrouping = string[];
 
 export type TOrderList = number[][];
 
