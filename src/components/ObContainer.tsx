@@ -8,7 +8,9 @@ const ObContainer: React.FC = (props) => {
 
     return (
         <ErrorBoundary>
-            <OrderBook sock={webSocket.current} />
+            <div data-testid="order-book">
+                <OrderBook sock={webSocket.current} />
+            </div>
         </ErrorBoundary >
     )
 }

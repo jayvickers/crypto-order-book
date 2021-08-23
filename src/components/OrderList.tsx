@@ -35,7 +35,7 @@ const OrderList: React.FC<IOrderListProps> = (props: IOrderListProps) => {
                     </div>
                 </div>
             }
-            <ul >
+            <ul data-testid="order-list">
                 {newOrders.map((order: number[], index: number) => {
                     return (
                         <li key={(order[0] * index)}>

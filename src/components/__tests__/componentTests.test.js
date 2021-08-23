@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import { toHaveStyle } from '@testing-library/jest-dom';
 import ObContainer from '../ObContainer';
 import OrderRow from '../OrderRow';
+import OrderList from '../OrderList';
 
 beforeEach(() => {
     Object.defineProperty(window, 'matchMedia', {
@@ -21,7 +22,9 @@ beforeEach(() => {
   });
 
 test('render without crashing', () => {
-  render(<ObContainer />);
+  const container = render(<ObContainer />);
+  const bookElement = container.getByTestId("order-book");
+  expect(bookElement).toBeInTheDocument();
 });
 
 test('row renders all children styled correctly', () => {
@@ -31,5 +34,14 @@ test('row renders all children styled correctly', () => {
     expect(priceElement).toHaveStyle("color: rgb(255, 90, 90)");
     expect(visualizerElement).toHaveStyle("background: rgb(255, 90, 90)");
     expect(visualizerElement).toHaveStyle("width: 42%");
-  });
+});
+
+
+test('list renders all rows', () => {
+    const testAsks = [[49000.50, 100, 100, 10],[49100.00, 100, 200, 20],[49300.10, 100, 300, 30],[49300.10, 100, 400, 60]];
+    const obList = render(<OrderList isMobile={false} orders={testAsks} orderType="ask" />);
+    const listRows = obList.getAllByTestId("order-row");    
+    expect(listRows.length).toBe(4);
+});
+  
   

@@ -33,7 +33,7 @@ const OrderRow: React.FC<IOrderRowProps> = (props: IOrderRowProps) => {
     //this is the only place wss feed data is actually drawn on the map.
     //everything is typed and escaped at this point, XSS unlikely
     return (
-        <div className={`row-container --${props.orderType}`} >
+        <div data-testid="order-row" className={`row-container --${props.orderType}`} >
             <div data-testid="visualizer" style={visualizerStyles} />
             <span style={priceColor} className="price-col">
                 {numberWithCommas(props.price.toFixed(2))}

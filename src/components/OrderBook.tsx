@@ -205,10 +205,6 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
       props.sock.send(JSON.stringify(unsubscribe));
     };
 
-    const timer: ReturnType<typeof setTimeout> = setTimeout(() => {
-      props.sock.close();
-    }, 30000);
-
   }, [ticker, group])
 
   /******************/
