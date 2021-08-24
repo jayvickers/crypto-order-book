@@ -281,15 +281,11 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
   const orderBookContainerStyles: React.CSSProperties = {
     display: "grid",
     ...(isMobile ? { gridTemplateRows: "1fr auto 1fr" } : { gridTemplateColumns: "1fr 1fr" }),
-  }
-
-  const mainStyles: React.CSSProperties = {
-    display: "grid",
-    gridTemplateRows: isMobile ? "35px 910px 65px" : "35px 710px 65px"
+    height: isMobile ? "910px" : "710px"
   }
 
   return (
-    <main style={mainStyles}>
+    <main>
       <Header groupVals={ticker === xbtTicker ? xbtGroupVals : ethGroupVals} handleGroupChange={handleGroupChange} showSpread={!isMobile} spread={spread.current} />
       <div style={orderBookContainerStyles}>
         <OrderList isMobile={isMobile} orders={orders.asks} orderType="ask" />
