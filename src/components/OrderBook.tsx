@@ -281,7 +281,9 @@ const OrderBook: React.FC<IOrderListProps> = (props: IOrderListProps) => {
   const orderBookContainerStyles: React.CSSProperties = {
     display: "grid",
     ...(isMobile ? { gridTemplateRows: "1fr auto 1fr" } : { gridTemplateColumns: "1fr 1fr" }),
-    height: isMobile ? "910px" : "710px"
+    height: isMobile ? "920px" : "710px",
+    overflow: "hidden"
+
   }
 
   return (
